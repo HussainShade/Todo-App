@@ -17,17 +17,32 @@ let todoItemsContainer = document.getElementById("todoItemsContainer");
 
         saveTodoButton.onclick = function() {
             localStorage.setItem("todoList", JSON.stringify(todoList));
+            showNotification("Your To-Do List has been saved successfully.");
         };
+        
+        function showNotification(message) {
+            const notification = document.createElement("div");
+            notification.className = "notification";
+            notification.innerText = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000); // Removes the notification after 3 seconds
+        }
+        
 
         function onAddTodo() {
             let userInputElement = document.getElementById("todoUserInput");
-            let userInputValue = userInputElement.value;
+            let errorMessageElement = document.getElementById("error-message");
+            let userInputValue = userInputElement.value.trim();
 
             if (userInputValue === "") {
-                alert("Enter Valid Text");
+                errorMessageElement.style.display = "block";
                 return;
             }
 
+            errorMessageElement.style.display = "none";
             todosCount = todosCount + 1;
 
             let newTodo = {
@@ -35,6 +50,7 @@ let todoItemsContainer = document.getElementById("todoItemsContainer");
                 uniqueNo: todosCount,
                 isChecked: false
             };
+
             todoList.push(newTodo);
             createAndAppendTodo(newTodo);
             userInputElement.value = "";
